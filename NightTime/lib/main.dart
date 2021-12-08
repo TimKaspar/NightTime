@@ -47,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Padding(
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 200),
-                child: Active(isSwitched))
+                child: Status(isSwitched))
           ],
         ),
       ),
@@ -63,11 +63,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class Active extends StatelessWidget{
+class Status extends StatelessWidget{
   bool isSwitched;
 
 
-  Active(this.isSwitched);
+  Status(this.isSwitched);
 
   @override
   Widget build(BuildContext context) {
