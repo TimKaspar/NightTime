@@ -7,9 +7,12 @@ class Time {
 
   final String toSleep;
 
-  final String sleepTime;
-
   final String wakeUp;
 
-  Time(this.id, this.toSleep, this.sleepTime, this.wakeUp);
+  Time(this.id, this.toSleep, this.wakeUp);
+
+  @override
+  String toString() {
+    return 'Time{id: $id, toSleep: $toSleep, wakeUp: $wakeUp}';
+  }
 }

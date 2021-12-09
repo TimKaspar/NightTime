@@ -81,7 +81,7 @@ class _$FloorDB extends FloorDB {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `time` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `toSleep` TEXT NOT NULL, `sleepTime` TEXT NOT NULL, `wakeUp` TEXT NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `time` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `toSleep` TEXT NOT NULL, `wakeUp` TEXT NOT NULL)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -104,7 +104,6 @@ class _$TimeDAO extends TimeDAO {
             (Time item) => <String, Object?>{
                   'id': item.id,
                   'toSleep': item.toSleep,
-                  'sleepTime': item.sleepTime,
                   'wakeUp': item.wakeUp
                 },
             changeListener);
@@ -120,21 +119,15 @@ class _$TimeDAO extends TimeDAO {
   @override
   Future<List<Time>> findAllTime() async {
     return _queryAdapter.queryList('SELECT * FROM time',
-        mapper: (Map<String, Object?> row) => Time(
-            row['id'] as int,
-            row['toSleep'] as String,
-            row['sleepTime'] as String,
-            row['wakeUp'] as String));
+        mapper: (Map<String, Object?> row) => Time(row['id'] as int,
+            row['toSleep'] as String, row['wakeUp'] as String));
   }
 
   @override
   Stream<Time?> findTimeById(int id) {
     return _queryAdapter.queryStream('SELECT * FROM time WHERE id = ?1',
-        mapper: (Map<String, Object?> row) => Time(
-            row['id'] as int,
-            row['toSleep'] as String,
-            row['sleepTime'] as String,
-            row['wakeUp'] as String),
+        mapper: (Map<String, Object?> row) => Time(row['id'] as int,
+            row['toSleep'] as String, row['wakeUp'] as String),
         arguments: [id],
         queryableName: 'time',
         isView: false);
