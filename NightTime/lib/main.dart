@@ -1,3 +1,4 @@
+import 'package:battery_plus/battery_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:nighttime/data.dart';
 import 'package:nighttime/database/database.dart';
@@ -29,6 +30,22 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var battery = Battery();
+    var _batteryState;
+
+    battery.onBatteryStateChanged.listen((BatteryState state) {
+      print(state);
+      if (_batteryState == null) {
+        _batteryState = state;
+      } else if (_batteryState != state) {
+        print("CHANGE: " + state.toString());
+        _batteryState = state;
+        executeInsert();
+      } else {
+        print(state);
+      }
+    });
+
     return Scaffold(
       appBar: AppBar(
         title: Text("NightTime"),
@@ -39,13 +56,16 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             Padding(
               padding: EdgeInsets.fromLTRB(0, 200, 0, 0),
-              child: Transform.scale(scale: 2.5,
-                child: Switch(value: isSwitched, onChanged: (value){
-                  setState(() {
-                    isSwitched = value;
-                  });
-                }),
-      ),
+              child: Transform.scale(
+                scale: 2.5,
+                child: Switch(
+                    value: isSwitched,
+                    onChanged: (value) {
+                      setState(() {
+                        isSwitched = value;
+                      });
+                    }),
+              ),
             ),
             Padding(
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 200),
@@ -56,8 +76,9 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           executeInsert();
-          Navigator.push(context,
-            MaterialPageRoute(builder: (context) => Data(DateTime.now(),DateTime.now(),DateTime.now())),
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => DataDisplayPage()),
           );
         },
       ),
@@ -65,17 +86,17 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class Status extends StatelessWidget{
+class Status extends StatelessWidget {
   bool isSwitched;
 
   Status(this.isSwitched);
 
   @override
   Widget build(BuildContext context) {
-    return Builder(builder: (context){
-      if(isSwitched == true){
+    return Builder(builder: (context) {
+      if (isSwitched == true) {
         return Text("Application is running");
-      }else{
+      } else {
         return Text("Application is not running");
       }
     });
@@ -85,31 +106,38 @@ class Status extends StatelessWidget{
 Future<void> executeInsert() async {
   final now = DateTime.now();
   final id = await getIdForInsert();
-  print("dbInsrt: ");
-  print(await dbInsert(id, now, now, now));
+  await dbInsert(id, now, now);
 }
 
-Future<Stream<Time?>> dbInsert(int id,DateTime toSleep, DateTime sleepTime, DateTime wakeUp) async{
-  final database = await $FloorFloorDB.databaseBuilder('app_database.db').build();
+Future<Stream<Time?>> dbInsert(
+    int id, DateTime toSleep, DateTime wakeUp) async {
+  print("INSERTING------------------------------INSERTING");
+  final database =
+      await $FloorFloorDB.databaseBuilder('app_database.db').build();
   final timeDAO = database.timeDAO;
 
   String toSleepStr = toSleep.toString();
-  String sleepTimeStr = sleepTime.toString();
   String wakeUpStr = wakeUp.toString();
 
-  final time = Time(id,toSleepStr, sleepTimeStr, wakeUpStr);
+  final time = Time(id, toSleepStr, wakeUpStr);
+  print("INSERTING: " + time.toString());
   await timeDAO.insertTime(time);
 
   final result = await timeDAO.findTimeById(id);
 
+  result.forEach((element) {
+    print("SUCCESFULLY INSERTED: " + element.toString());
+  });
+
   return result;
 }
 
-Future<int> getIdForInsert() async{
-  final database = await $FloorFloorDB.databaseBuilder('app_database.db').build();
+Future<int> getIdForInsert() async {
+  final database =
+      await $FloorFloorDB.databaseBuilder('app_database.db').build();
   final timeDAO = database.timeDAO;
 
   final List timeList = await timeDAO.findAllTime();
   final length = timeList.length;
-  return length+1;
+  return length + 1;
 }
