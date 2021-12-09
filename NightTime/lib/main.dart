@@ -1,9 +1,6 @@
 import 'package:battery_plus/battery_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:nighttime/data.dart';
-import 'package:nighttime/database/database.dart';
-
-import 'database/Time.dart';
 
 void main() {
   runApp(MyApp());
@@ -40,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
       } else if (_batteryState != state) {
         print("CHANGE: " + state.toString());
         _batteryState = state;
-        executeInsert();
+        //TODO create
       } else {
         print(state);
       }
@@ -75,7 +72,6 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          executeInsert();
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => DataDisplayPage()),
@@ -101,43 +97,4 @@ class Status extends StatelessWidget {
       }
     });
   }
-}
-
-Future<void> executeInsert() async {
-  final now = DateTime.now();
-  final id = await getIdForInsert();
-  await dbInsert(id, now, now);
-}
-
-Future<Stream<Time?>> dbInsert(
-    int id, DateTime toSleep, DateTime wakeUp) async {
-  print("INSERTING------------------------------INSERTING");
-  final database =
-      await $FloorFloorDB.databaseBuilder('app_database.db').build();
-  final timeDAO = database.timeDAO;
-
-  String toSleepStr = toSleep.toString();
-  String wakeUpStr = wakeUp.toString();
-
-  final time = Time(id, toSleepStr, wakeUpStr);
-  print("INSERTING: " + time.toString());
-  await timeDAO.insertTime(time);
-
-  final result = await timeDAO.findTimeById(id);
-
-  result.forEach((element) {
-    print("SUCCESFULLY INSERTED: " + element.toString());
-  });
-
-  return result;
-}
-
-Future<int> getIdForInsert() async {
-  final database =
-      await $FloorFloorDB.databaseBuilder('app_database.db').build();
-  final timeDAO = database.timeDAO;
-
-  final List timeList = await timeDAO.findAllTime();
-  final length = timeList.length;
-  return length + 1;
 }

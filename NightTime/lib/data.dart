@@ -2,9 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import 'database/Time.dart';
-import 'database/database.dart';
-
 class DataDisplayPage extends StatefulWidget {
   @override
   _DataDisplayPageState createState() {
@@ -75,46 +72,4 @@ class _DataDisplayPageState extends State<DataDisplayPage> {
       ),
     );
   }
-}
-
-Future<Map<String, DateTime>> getDates() async {
-  final database =
-      await $FloorFloorDB.databaseBuilder('app_database.db').build();
-  final timeDAO = database.timeDAO;
-
-  List<Time> timeList = await timeDAO.findAllTime();
-  print("RECEIVED LIST: "+timeList.toString());
-  Map<String, DateTime> dateMap = {};
-  int totalEntries = 0;
-
-  int totalToSleep = 0;
-  int totalSleepTime = 0;
-  int totalWakeUp = 0;
-
-  for (Time time in timeList) {
-    DateTime toSleepDate = DateTime.parse(time.toSleep);
-    DateTime wakeUpDate = DateTime.parse(time.wakeUp);
-
-    totalSleepTime += toSleepDate.difference(wakeUpDate).inMilliseconds;
-    totalEntries++;
-
-    totalToSleep += toSleepDate.millisecondsSinceEpoch;
-    totalWakeUp += wakeUpDate.millisecondsSinceEpoch;
-  }
-  print("total wakeup: "+ totalWakeUp.toString());
-  print("total tosleep: "+ totalToSleep.toString());
-
-  DateTime avgSleepTime = DateTime.fromMillisecondsSinceEpoch(int.parse((totalSleepTime / totalEntries).round().toString()));
-  DateTime avgWakeUp = DateTime.fromMillisecondsSinceEpoch(int.parse((totalWakeUp / totalEntries).round().toString()));
-  DateTime avgToSleep = DateTime.fromMillisecondsSinceEpoch(int.parse((totalToSleep / totalEntries).round().toString()));
-
-  print("avg time: "+avgToSleep.toString());
-  print("avg wakeup: "+avgWakeUp.toString());
-  print("avg tosleep: "+avgSleepTime.toString());
-
-  dateMap.putIfAbsent("sleepTime", () => avgSleepTime);
-  dateMap.putIfAbsent("wakeUp", () => avgWakeUp);
-  dateMap.putIfAbsent("toSleep", () => avgToSleep);
-
-  return dateMap;
 }
