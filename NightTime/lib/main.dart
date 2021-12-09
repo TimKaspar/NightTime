@@ -27,12 +27,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   bool isSwitched = false;
-  var battery = Battery();
-  var _batteryState;
 
   @override
-  void initState() {
-    super.initState();
+  Widget build(BuildContext context) {
+    var battery = Battery();
+    var _batteryState;
 
     battery.onBatteryStateChanged.listen((BatteryState state) {
       print(state);
@@ -41,15 +40,12 @@ class _MyHomePageState extends State<MyHomePage> {
       } else if (_batteryState != state) {
         print("CHANGE: " + state.toString());
         _batteryState = state;
-        // executeInsert();
+        executeInsert();
       } else {
         print(state);
       }
     });
-  }
 
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("NightTime"),
