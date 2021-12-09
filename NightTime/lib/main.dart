@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:nighttime/data.dart';
+import 'package:nighttime/database/database.dart';
+
+import 'database/Time.dart';
 
 void main() {
   runApp(MyApp());
@@ -40,7 +43,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Switch(value: isSwitched, onChanged: (value){
                   setState(() {
                     isSwitched = value;
-                    //TODO start app
                   });
                 }),
       ),
@@ -53,11 +55,11 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          executeInsert();
           Navigator.push(context,
-            MaterialPageRoute(builder: (context) => Data()),
+            MaterialPageRoute(builder: (context) => Data(DateTime.now(),DateTime.now(),DateTime.now())),
           );
         },
-
       ),
     );
   }
@@ -65,7 +67,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
 class Status extends StatelessWidget{
   bool isSwitched;
-
 
   Status(this.isSwitched);
 
@@ -79,7 +80,36 @@ class Status extends StatelessWidget{
       }
     });
   }
+}
 
+Future<void> executeInsert() async {
+  final now = DateTime.now();
+  final id = await getIdForInsert();
+  print("dbInsrt: ");
+  print(await dbInsert(id, now, now, now));
+}
 
+Future<Stream<Time?>> dbInsert(int id,DateTime toSleep, DateTime sleepTime, DateTime wakeUp) async{
+  final database = await $FloorFloorDB.databaseBuilder('app_database.db').build();
+  final timeDAO = database.timeDAO;
 
+  String toSleepStr = toSleep.toString();
+  String sleepTimeStr = sleepTime.toString();
+  String wakeUpStr = wakeUp.toString();
+
+  final time = Time(id,toSleepStr, sleepTimeStr, wakeUpStr);
+  await timeDAO.insertTime(time);
+
+  final result = await timeDAO.findTimeById(id);
+
+  return result;
+}
+
+Future<int> getIdForInsert() async{
+  final database = await $FloorFloorDB.databaseBuilder('app_database.db').build();
+  final timeDAO = database.timeDAO;
+
+  final List timeList = await timeDAO.findAllTime();
+  final length = timeList.length;
+  return length+1;
 }
