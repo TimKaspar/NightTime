@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "357858419569",
-    "project_id": "nighttime-aa55b",
-    "storage_bucket": "nighttime-aa55b.appspot.com"
+    "project_number": "323880693832",
+    "project_id": "nighttime-b9cb8",
+    "storage_bucket": "nighttime-b9cb8.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:357858419569:android:b23428bb09dd860903ccd0",
+        "mobilesdk_app_id": "1:323880693832:android:e959593dd79546f5f0687d",
         "android_client_info": {
-          "package_name": "ch.ti8m.kti.nighttime"
+          "package_name": "ch.ti8m.nighttime"
         }
       },
       "oauth_client": [
         {
-          "client_id": "357858419569-g2dnl2og3cr2pkq2f00ikvf0o91i3sit.apps.googleusercontent.com",
+          "client_id": "323880693832-l7ehdivjihiubom7ttnr134416blrq4l.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCkL4EZtik5_dJmd_ta0cqKpRk8t6w_EXU"
+          "current_key": "AIzaSyAuX1ovcG1fITE6xTm8mwpFFCmkLbZijKI"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "357858419569-g2dnl2og3cr2pkq2f00ikvf0o91i3sit.apps.googleusercontent.com",
+              "client_id": "323880693832-l7ehdivjihiubom7ttnr134416blrq4l.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
