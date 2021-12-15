@@ -24,30 +24,37 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  var battery = Battery();
+  var _batteryState;
+
   bool isSwitched = false;
+
+
+  @override
+  void initState() {
+    battery.onBatteryStateChanged.listen((BatteryState state) {
+      if(_batteryState != BatteryState.full) {
+        if (_batteryState == null) {
+          _batteryState = state;
+        } else if (_batteryState != state) {
+          print("CHANGE: " + state.toString());
+          _batteryState = state;
+          if (Time.toSleep.length == Time.wakeUp.length) {
+            Time.toSleep.add(DateTime.now());
+          } else if (Time.toSleep.length - 1 == Time.wakeUp.length) {
+            Time.wakeUp.add(DateTime.now());
+          }
+          print("toSleep: "+Time.toSleep.toString());
+          print("wakeUp: "+Time.wakeUp.toString());
+        } else {
+          print(state);
+        }
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    var battery = Battery();
-    var _batteryState;
-
-    battery.onBatteryStateChanged.listen((BatteryState state) {
-      if (_batteryState == null) {
-        _batteryState = state;
-      } else if (_batteryState != state) {
-        print("CHANGE: " + state.toString());
-        _batteryState = state;
-        if (Time.toSleep.length == Time.wakeUp.length) {
-          Time.toSleep.add(DateTime.now());
-        } else if (Time.toSleep.length - 1 == Time.wakeUp.length) {
-          Time.wakeUp.add(DateTime.now());
-        }
-
-        //TODO create
-      } else {
-        print(state);
-      }
-    });
 
     return Scaffold(
       appBar: AppBar(
