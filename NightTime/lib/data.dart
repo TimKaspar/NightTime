@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:nighttime/time.dart';
 
 class DataDisplayPage extends StatefulWidget {
   @override
@@ -7,6 +8,12 @@ class DataDisplayPage extends StatefulWidget {
 }
 
 class _DataDisplayPageState extends State<DataDisplayPage> {
+
+  @override
+  void initState() {
+    super.initState();
+    calculator();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,4 +52,27 @@ class _DataDisplayPageState extends State<DataDisplayPage> {
       ),
     );
   }
+}
+
+void calculator() {
+  int totalToSleep = 0;
+  int totalWakeUp = 0;
+  DateTime avgToSleep;
+  DateTime avgWakeUp;
+  Duration avgSleepTime;
+
+  for (DateTime time in Time.toSleep) {
+    totalToSleep += time.millisecondsSinceEpoch;
+  }
+  for (DateTime time in Time.wakeUp) {
+    totalWakeUp += time.millisecondsSinceEpoch;
+  }
+  avgToSleep = DateTime.fromMillisecondsSinceEpoch(int.parse((totalToSleep / Time.toSleep.length).toString()));
+  avgWakeUp = DateTime.fromMillisecondsSinceEpoch(int.parse((totalWakeUp / Time.wakeUp.length).toString()));
+
+  avgSleepTime = avgToSleep.difference(avgWakeUp);
+
+  print("Avg wakeup: "+ avgWakeUp.toString());
+  print("Avg toSleep: "+ avgToSleep.toString());
+  print("Avg sleep time: "+ avgSleepTime.toString());
 }
