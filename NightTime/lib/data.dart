@@ -54,7 +54,7 @@ class _DataDisplayPageState extends State<DataDisplayPage> {
   }
 }
 
-void calculator() {
+Map<String, String> calculator() {
   int totalToSleep = 0;
   int totalWakeUp = 0;
   DateTime avgToSleep;
