@@ -1,30 +1,11 @@
 import 'package:battery_plus/battery_plus.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:nighttime/data.dart';
 import 'package:nighttime/time.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  final Future<FirebaseApp> _fbApp = Firebase.initializeApp();
-
-  runApp(
-    FutureBuilder(
-      future: _fbApp,
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Text('Initialization Error');
-        } else if (snapshot.hasData) {
-          return MyApp();
-        } else {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      },
-    ),
-  );
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -51,21 +32,15 @@ class _MyHomePageState extends State<MyHomePage> {
     var battery = Battery();
     var _batteryState;
 
-    Timestamp toSleep = Timestamp.now();
-    Timestamp wakeUp = Timestamp.now();
-
-    CollectionReference collection =
-        FirebaseFirestore.instance.collection("time");
-
     battery.onBatteryStateChanged.listen((BatteryState state) {
       if (_batteryState == null) {
         _batteryState = state;
       } else if (_batteryState != state) {
         print("CHANGE: " + state.toString());
         _batteryState = state;
-        if(Time.toSleep.length == Time.wakeUp.length){
+        if (Time.toSleep.length == Time.wakeUp.length) {
           Time.toSleep.add(DateTime.now());
-        } else if(Time.toSleep.length - 1 == Time.wakeUp.length){
+        } else if (Time.toSleep.length - 1 == Time.wakeUp.length) {
           Time.wakeUp.add(DateTime.now());
         }
 
@@ -92,7 +67,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     onChanged: (value) {
                       setState(() {
                         isSwitched = value;
-                        collection.add({"toSleep": toSleep, "wakeUp": wakeUp});
                       });
                     }),
               ),
