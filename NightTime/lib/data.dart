@@ -92,8 +92,5 @@ Map<String, String> calculator() {
   map.putIfAbsent("wakeUp", () => formattedWakeUp);
   map.putIfAbsent("sleepTime", () => formattedSleepTime);
 
-  print("Avg wakeup: "+ avgWakeUp.toString());
-  print("Avg toSleep: "+ avgToSleep.toString());
-  print("Avg sleep time: "+ avgSleepTime.toString());
   return map;
 }
