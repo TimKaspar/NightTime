@@ -40,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
         } else if (_batteryState != state) {
           print("CHANGE: " + state.toString());
           _batteryState = state;
-          if (Time.toSleep.length == Time.wakeUp.length) {
+          if (Time.toSleep.length == Time.wakeUp.length && DateTime.now().hour > 21) {
             Time.toSleep.add(DateTime.now());
           } else if (Time.toSleep.length - 1 == Time.wakeUp.length) {
             Time.wakeUp.add(DateTime.now());
