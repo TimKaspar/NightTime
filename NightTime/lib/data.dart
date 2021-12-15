@@ -54,6 +54,10 @@ class _DataDisplayPageState extends State<DataDisplayPage> {
   }
 }
 
+extension on Duration {
+  String format() => '$this'.split('.')[0].padLeft(8, '0');
+}
+
 Map<String, String> calculator() {
   int totalToSleep = 0;
   int totalWakeUp = 0;
