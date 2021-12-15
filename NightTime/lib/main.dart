@@ -32,6 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
+    super.initState();
     battery.onBatteryStateChanged.listen((BatteryState state) {
       if(_batteryState != BatteryState.full) {
         if (_batteryState == null) {
