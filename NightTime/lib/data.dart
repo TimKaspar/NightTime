@@ -60,6 +60,9 @@ void calculator() {
   DateTime avgToSleep;
   DateTime avgWakeUp;
   Duration avgSleepTime;
+  String formattedToSleep = "";
+  String formattedWakeUp = "";
+  String formattedSleepTime = "";
 
   for (DateTime time in Time.toSleep) {
     totalToSleep += time.millisecondsSinceEpoch;
@@ -67,12 +70,26 @@ void calculator() {
   for (DateTime time in Time.wakeUp) {
     totalWakeUp += time.millisecondsSinceEpoch;
   }
-  avgToSleep = DateTime.fromMillisecondsSinceEpoch(int.parse((totalToSleep / Time.toSleep.length).toString()));
-  avgWakeUp = DateTime.fromMillisecondsSinceEpoch(int.parse((totalWakeUp / Time.wakeUp.length).toString()));
 
-  avgSleepTime = avgToSleep.difference(avgWakeUp);
+  if (totalToSleep > 0) {
+    int divToSleep = (totalToSleep / Time.toSleep.length).round();
+    int divWakeUp = (totalWakeUp / Time.wakeUp.length).round();
+
+    avgToSleep = DateTime.fromMillisecondsSinceEpoch(divToSleep);
+    avgWakeUp = DateTime.fromMillisecondsSinceEpoch(divWakeUp);
+    avgSleepTime = avgToSleep.difference(avgWakeUp);
+
+    formattedToSleep = DateFormat('kk:mm').format(avgToSleep);
+    formattedWakeUp = DateFormat('kk:mm').format(avgToSleep);
+    formattedSleepTime = avgSleepTime.format();
+  }
+  Map<String, String> map = {};
+  map.putIfAbsent("toSleep", () => formattedToSleep);
+  map.putIfAbsent("wakeUp", () => formattedWakeUp);
+  map.putIfAbsent("sleepTime", () => formattedSleepTime);
 
   print("Avg wakeup: "+ avgWakeUp.toString());
   print("Avg toSleep: "+ avgToSleep.toString());
   print("Avg sleep time: "+ avgSleepTime.toString());
+  return map;
 }
