@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:nighttime/time.dart';
 
 class DataDisplayPage extends StatefulWidget {
@@ -8,7 +9,6 @@ class DataDisplayPage extends StatefulWidget {
 }
 
 class _DataDisplayPageState extends State<DataDisplayPage> {
-
   @override
   void initState() {
     super.initState();
@@ -32,19 +32,53 @@ class _DataDisplayPageState extends State<DataDisplayPage> {
                   "Avg. Einschlaf-Zeit",
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                 ),
-                Text("data"),
+                Builder(
+                  builder: (BuildContext context) {
+                    Map<String, String> map = calculator();
+                    String? toSleep = map["toSleep"];
+
+                    if (toSleep == null || toSleep == "") {
+                      return Text("Noch keine Daten vorhanden");
+                    } else {
+                      return Text(toSleep);
+                    }
+                  },
+                ),
                 Padding(
-                    padding: EdgeInsets.only(top: 40),
-                    child: Text("Avg. Schlaf-Zeit",
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.bold))),
-                Text("data"),
+                  padding: EdgeInsets.only(top: 40),
+                  child: Text("Avg. Schlaf-Zeit",
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                ),
+                Builder(
+                  builder: (BuildContext context) {
+                    Map<String, String> map = calculator();
+                    String? sleepTime = map["sleepTime"];
+
+                    if (sleepTime == null || sleepTime == "") {
+                      return Text("Noch keine Daten vorhanden");
+                    } else {
+                      return Text(sleepTime);
+                    }
+                  },
+                ),
                 Padding(
                     padding: EdgeInsets.only(top: 40),
                     child: Text("Avg. Aufwach-Zeit",
                         style: TextStyle(
                             fontSize: 15, fontWeight: FontWeight.bold))),
-                Text("data"),
+                Builder(
+                  builder: (BuildContext context) {
+                    Map<String, String> map = calculator();
+                    String? wakeUp = map["wakeUp"];
+
+                    if (wakeUp == null || wakeUp == "") {
+                      return Text("Noch keine Daten vorhanden");
+                    } else {
+                      return Text(wakeUp);
+                    }
+                  },
+                ),
               ],
             ),
           ),
