@@ -1,9 +1,29 @@
 import 'package:battery_plus/battery_plus.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:nighttime/data.dart';
 
 void main() {
-  runApp(MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  final Future<FirebaseApp> _fbApp = Firebase.initializeApp();
+
+  runApp(
+    FutureBuilder(
+      future: _fbApp,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return Text('Initialization Error');
+        } else if (snapshot.hasData) {
+          return MyApp();
+        } else {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -30,8 +50,13 @@ class _MyHomePageState extends State<MyHomePage> {
     var battery = Battery();
     var _batteryState;
 
+    Timestamp toSleep = Timestamp.now();
+    Timestamp wakeUp = Timestamp.now();
+
+    CollectionReference collection =
+        FirebaseFirestore.instance.collection("time");
+
     battery.onBatteryStateChanged.listen((BatteryState state) {
-      print(state);
       if (_batteryState == null) {
         _batteryState = state;
       } else if (_batteryState != state) {
@@ -60,6 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onChanged: (value) {
                       setState(() {
                         isSwitched = value;
+                        collection.add({"toSleep": toSleep, "wakeUp": wakeUp});
                       });
                     }),
               ),
