@@ -1,5 +1,6 @@
 import 'package:battery_plus/battery_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:nighttime/data.dart';
 import 'package:nighttime/time.dart';
 
@@ -90,7 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
             context,
             MaterialPageRoute(builder: (context) => DataDisplayPage()),
           );
-        },
+        }, child: Icon(MdiIcons.databaseEye),
       ),
     );
   }
